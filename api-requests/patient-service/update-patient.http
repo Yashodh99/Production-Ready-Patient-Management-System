@@ -1,0 +1,15 @@
+### PUT request for patient
+PUT http://localhost:4000/patients/123e4567-e89b-12d3-a456-426614174000
+Content-Type: application/json
+
+
+{
+  "name": "Yashodh Up",
+  "email": "abcce@gmail.com",
+  "address": "123 main street",
+  "dateOfBirth": "1994-08-04"
+
+}
+
+
+###
