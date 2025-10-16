@@ -1,5 +1,5 @@
 server:
-  port:4004
+  port: 4004
 
 spring:
   cloud:
@@ -8,13 +8,13 @@ spring:
         - id: patient-service-route
           uri: http://patient-service:4000
           predicates:
-           - Path=/api/patients/**
+            - Path=/api/patients/**
           filters:
-           - StripPrefix=1
+            - StripPrefix=1
 
         - id: api-docs-patient-route
-        - uri: http://patient-service:4000
+          uri: http://patient-service:4000
           predicates:
             - Path=/api-docs/patients
           filters:
-            - RewritePath=/api-docs/patients,v3/api-docs
+            - SetPath=/v3/api-docs
