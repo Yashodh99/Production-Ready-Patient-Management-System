@@ -1,35 +1,26 @@
-package com.pm.authservice.controller;
-import com.pm.authservice.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import com.pm.authservice.dto.LoginRequestDTO;
-import com.pm.authservice.dto.LoginResponseDTO;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+package com.pm.authservice.config;
 
-import java.util.Optional;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-@RestController
-public class AuthController {
+@Configuration
+public class SecurityConfig {
 
-    private final AuthService authService;
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.authorizeHttpRequests(authorize -> authorize.anyRequest().permitAll())
+                .csrf(AbstractHttpConfigurer::disable);
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
+        return http.build();
     }
 
-    @Operation(summary= "Generate token on user login")
-    @PostMapping("/login")
-    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO loginRequestDTO) {
-
-        Optional<String> tokenOptional = authService.authenticate(loginRequestDTO);
-        if (tokenOptional.isEmpty()) {
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        String token = tokenOptional.get();
-        return  ResponseEntity.ok(new LoginResponseDTO(token));
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
